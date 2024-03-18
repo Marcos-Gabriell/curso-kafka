@@ -1,5 +1,6 @@
 package br.com.marcos.paymentservice.config;
 
+
 import java.util.HashMap;
 
 import org.apache.kafka.clients.admin.AdminClientConfig;
@@ -18,14 +19,16 @@ public class KafkaAdminConfig {
 	private final KafkaProperties properties;
 
 	@Bean
-	public KafkaAdmin kafkaAdmin() {
-		var configs = new HashMap<String, Object>();
-		configs.put(AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG, properties.getBootstrapServers());
-		return new KafkaAdmin(configs);
-	}
+    public KafkaAdmin kafkaAdmin() {
+        var configs = new HashMap<String, Object>();
+        configs.put(AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG, properties.getBootstrapServers());
+        return new KafkaAdmin(configs);
+    }
 
-	@Bean
-	public KafkaAdmin.NewTopics newTopics() {
-		return new KafkaAdmin.NewTopics(TopicBuilder.name("payment-topic").partitions(1).build());
-	}
+    @Bean
+    public KafkaAdmin.NewTopics topics() {
+        return new KafkaAdmin.NewTopics(
+                TopicBuilder.name("payment-topic").partitions(2).replicas(1).build()
+        );
+    }
 }
